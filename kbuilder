@@ -1,0 +1,241 @@
+#!/bin/bash
+#
+#
+# A bash script for building custom kernel packages for Arch Linux
+#
+#
+# This is free and unencumbered software released into the public domain.
+#
+# Anyone is free to copy, modify, publish, use, compile, sell, or
+# distribute this software, either in source code form or as a compiled
+# binary, for any purpose, commercial or non-commercial, and by any
+# means.
+#
+# In jurisdictions that recognize copyright laws, the author or authors
+# of this software dedicate any and all copyright interest in the
+# software to the public domain. We make this dedication for the benefit
+# of the public at large and to the detriment of our heirs and
+# successors. We intend this dedication to be an overt act of
+# relinquishment in perpetuity of all present and future rights to this
+# software under copyright law.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+# OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+# ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+# OTHER DEALINGS IN THE SOFTWARE.
+#
+# For more information, please refer to <http://unlicense.org/>
+#
+
+
+
+VERSION="0.1.0"
+DESC="A bash script for building custom kernel packages for Arch Linux"
+KBUILDER_DIR="$HOME/.kbuilder"
+HOOKS_DIR="/etc/kbuilder/hooks"
+SOURCE_URL="https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/linux/trunk"
+
+
+
+# print function for printing output to the
+# console
+print () {
+  
+    echo -e "$@" >&2
+
+}
+
+
+
+# Same as print(), but without a newline
+# appended
+print_no_newline () {
+  
+    echo -en "$@" >&2
+
+}
+
+
+
+# No entry for root >:(
+#
+root_check () {
+  
+    print "==> Making sure user is not root..."
+  
+    if [ "$(id -u)" = "0" ]; then
+        print "  -> fail"
+        print "ERROR: kbuilder should not be run as root. Exiting."
+	  exit 1
+    fi
+    print "  -> pass, id is $(id -u)"
+
+}
+
+
+
+# Help message
+#
+command_help () {
+
+    cat <<-EOF
+usage: kbuilder <command> [command]
+
+  commands:
+    
+    help        show this message
+    build       fetch and build a kernel with makepkg
+    install     install the built kernel with pacman
+
+kbuilder $VERSION
+EOF
+
+}
+
+
+
+# Most Arch Linux systems should have these
+# commands, but it's better to check
+dep_check () {
+
+    print "==> Checking if required commands are available..."
+    
+    for dep in curl makepkg sudo sed rm cd cat mkdir run-parts; do
+        print_no_newline "  -> $dep..."
+        if ! command -v $dep &> /dev/null; then
+            print "no"
+            print "ERROR: Command $dep not available"
+            exit 1
+        fi
+        print "yes"
+    done
+
+}
+
+
+
+# Install the built kernel with pacman and
+# delete the cache directory
+command_install () {
+  
+    print "==> Checking if kernel package has been built..."
+  
+    if [ ! -d "$KBUILDER_DIR/cache" ]; then
+        print "  -> no"
+        print "ERROR: Kernel not built yet"
+        exit 1
+    fi
+    print "  -> yes"
+  
+    print "==> Installing kernel packages with pacman..."
+    sudo pacman -U $KBUILDER_DIR/cache/*.pkg.tar.zst || { print "ERROR: Command 'sudo pacman -U $KBUILDER_DIR/cache/*.pkg.tar.zst' did not complete successfully" ; exit 1; }
+  
+    print "==> Deleting cache"
+    rm -rf $KBUILDER_DIR/cache || { print "ERROR: Could not delete $KBUILDER_DIR/cache" ; exit 1; }
+  
+    print "==> Kernel installed successfully"
+
+}
+
+
+
+# Fetch PKGBUILD and config, modify the PKGBUILD
+# and build the kernel like any other aur package
+command_build () {
+  
+    print "==> Checking if $KBUILDER_DIR exists..."
+  
+    if [ -d "$KBUILDER_DIR" ]; then
+        print "  -> yes"
+        print "==> Deleting $KBUILDER_DIR/cache for new build..."
+        rm -rf $KBUILDER_DIR/cache || { print "ERROR: Could not delete $KBUILDER_DIR/cache" ; exit 1; }
+    else
+        print "  -> no"
+    fi
+    
+    print "==> Creating $KBUILDER_DIR/cache..."
+    mkdir -p $KBUILDER_DIR/cache || { print "ERROR: Could not create $KBUILDER_DIR/cache" ; exit 1; }
+  
+    print "==> Fetching PKGBUILD and config..."
+    print_no_newline "  -> PKGBUILD..."
+    curl --silent -o $KBUILDER_DIR/cache/PKGBUILD $SOURCE_URL/PKGBUILD || { print "fail" ; print "ERROR: Could not fetch PKGBUILD" ; exit 1; }
+    print "done"  
+    print_no_newline "  -> config..."
+    curl --silent -o $KBUILDER_DIR/cache/config $SOURCE_URL/config || { print "fail" ; print "ERROR: Could not fetch config" ; exit 1; }
+    print "done"
+    
+    print "==> Checking the KBUILDER_PKG_NAME variable..."
+    if [[ ! -v KBUILDER_PKG_NAME ]]; then
+        print "  -> variable is not set, using default: linux-kbuilder-custom"
+        KBUILDER_PKG_NAME="kbuilder-linux-custom"
+    elif [[ -z "$KBUILDER_PKG_NAME" ]]; then
+        print "  -> variable is set to an empty string, using default: linux-kbuilder-custom"
+        KBUILDER_PKG_NAME="kbuilder-linux-custom"
+    else
+        print "  -> variable is set to $KBUILDER_PKG_NAME"
+    fi
+
+    print "==> Setting package name to $KBUILDER_PKG_NAME..."
+    sed -i "s@pkgbase=linux@pkgbase=$KBUILDER_PKG_NAME@" $KBUILDER_DIR/cache/PKGBUILD || { print "ERROR: Could not set package name" ; exit 1; }
+
+    print "==> Injecting bash shell and run-parts hook into PKGBUILD...."
+    sed -i "/  make olddefconfig/a \  run-parts --regex 'kbuilder-hook-*' $HOOKS_DIR" $KBUILDER_DIR/cache/PKGBUILD
+    sed -i "/  run-parts/a \  echo ''; echo 'This is an injected shell, you can apply any patches or modify the config now. Exit the shell to continue the build.'; bash" $KBUILDER_DIR/cache/PKGBUILD
+
+    print "==> Checking the KBUILDER_BUILD_JOBS variable..."
+    if [[ ! -v KBUILDER_BUILD_JOBS ]]; then
+        print "  -> variable is not set, using make's default"
+    elif [[ -z "$KBUILDER_BUILD_JOBS" ]]; then
+        print "  -> variable is set to an empty string, using make's default"
+    else
+        re="^[0-9]+$"
+        if ! [[ $KBUILDER_BUILD_JOBS =~ $re ]] ; then
+            print "  -> variable is not set as a number, using make's default"
+        else
+            print "  -> variable is set to $KBUILDER_BUILD_JOBS, injecting argument into PKGBUILD"
+            sed -i "s@make all@make -j$KBUILDER_BUILD_JOBS all@" $KBUILDER_DIR/cache/PKGBUILD || { print "ERROR: Could not inject argument into PKGBUILD" ; exit 1; }
+        fi
+    fi
+  
+    print "==> Commenting out 'make htmldocs' in PKGBUILD..."
+    sed -i "s@make htmldocs@#make htmldocs@" $KBUILDER_DIR/cache/PKGBUILD || { print "ERROR: Could not uncomment 'make htmldocs' in PKGBUILD" ; exit 1; }
+  
+    print "==> Entering $KBUILDER_DIR/cache..."
+    cd $KBUILDER_DIR/cache
+
+    print "==> Starting makepkg..."
+    makepkg -s --skippgpcheck || { print "ERROR: Command 'makepkg -s --skippgpcheck' did not complete successfully" ; exit 1; }
+
+}
+
+
+
+# Exit if no commands given, before the main
+# command parser loop is reached
+if [ $# -eq 0 ]; then
+    print "ERROR: No command provided"
+    exit 1
+fi
+
+
+
+# Main command parser loop
+#
+for arg in "$@"; do
+    if [[ "$arg" == "help"* || "$arg" == "-h"* || "$arg" == "--h"* || "$arg" == "--help"* ]]; then
+        command_help
+    elif [[ "$arg" == "install" ]]; then
+        root_check
+        dep_check
+        command_install
+    elif [[ "$arg" == "build" ]]; then
+        root_check
+        dep_check
+        command_build
+    else
+        print "ERROR: Unknown command: $arg"
+    fi
+done

@@ -13,4 +13,4 @@ tar czvf $PKGNAME-$PKGVER.tar.gz *
 archive_digest=$(b2sum $PKGNAME-$PKGVER.tar.gz)
 suffix="  $PKGNAME-$PKGVER.tar.gz"
 archive_digest_raw=${archive_digest%"$suffix"}
-sed -i "/source=(/a \b2sums('$archive_digest_raw')" PKGBUILD
+sed -i "/source=(/a \b2sums=('$archive_digest_raw')" PKGBUILD

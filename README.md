@@ -19,8 +19,7 @@ git clone https://github.com/AnnikaV9/kbuilder
 cd kbuilder
 
 # Prepare the package
-chmod +x package.sh
-./package.sh
+bash package.sh
 
 # Install kbuilder
 makepkg -si

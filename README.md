@@ -5,6 +5,9 @@ kbuilder is a bash script that allows you to build and install your own custom k
 <br />
 
 ## Installation
+The [stable version](https://aur.archlinux.org/packages/kbuilder) is available on the [AUR](https://aur.archlinux.org/).
+
+To install the dev version from this repository:
 ```
 # Clone the repository
 git clone https://github.com/AnnikaV9/kbuilder

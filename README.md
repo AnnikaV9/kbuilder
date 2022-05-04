@@ -1,4 +1,4 @@
-# kbuilder
+# kbuilder <br/> <a target="_blank" href="https://aur.archlinux.org/kbuilder" title="AUR Version"><img src="https://img.shields.io/badge/AUR%20Stable-0.1.0-blue?style=flat-square&logo=archlinux"></a> <a target="_blank" href="https://github.com/AnnikaV9/kbuilder" title="Github Version"><img src="https://img.shields.io/badge/Github%20Dev-0.1.0-9cf?style=flat-square&logo=github"></a> <a target="_blank" href="https://github.com/AnnikaV9/kbuilder/blob/master/LICENSE" title="License"><img src="https://img.shields.io/badge/License-The%20Unlicense-red?style=flat-square"></a>
 kbuilder is a bash script that allows you to build and install your own custom kernel packages with custom patches and configuration, with a single command. It fetches the stock vanilla kernel's [PKGBUILD](https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/linux/trunk/PKGBUILD), and uses it as a template to build your custom package.
 
 <br />

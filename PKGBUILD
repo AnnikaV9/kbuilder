@@ -6,7 +6,7 @@ arch=("x86_64")
 url="https://github.com/AnnikaV9/$pkgname"
 license=("Unlicense")
 provides=("$pkgname")
-depends=("run-parts" "sed" "sudo" "curl" "coreutils")
+depends=("bash" "pacman" "run-parts" "sed" "sudo" "curl" "coreutils")
 source=("$pkgname-$pkgver.tar.gz")
 
 package() {

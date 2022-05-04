@@ -34,7 +34,6 @@ usage: kbuilder <command> [command]
     help        show this message
     build       fetch and build a kernel with makepkg
     install     install the built kernel with pacman
-
 ```
 During the build process, kbuilder will inject a bash shell into the PKGBUILD. This will spawn the shell right before `build()` is called, allowing you to add any patches or change the kernel config interactively.
 

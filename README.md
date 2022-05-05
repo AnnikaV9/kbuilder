@@ -3,9 +3,8 @@ kbuilder is a bash script that allows you to build and install your own custom k
 
 <br />
 
-![preview1](https://user-images.githubusercontent.com/68383195/166858395-e529bed8-9e13-4297-8ee4-dbb5fea345d7.png)
-![preview2](https://user-images.githubusercontent.com/68383195/166858398-95cfabf6-6757-4d0d-957f-2bb276d3c6ad.png)
-
+![preview1](https://user-images.githubusercontent.com/68383195/166893293-859aa2d9-d681-46d9-a9a9-af73f0db20b1.png)
+![preview2](https://user-images.githubusercontent.com/68383195/166893298-4f32b1cb-e28a-43aa-aec0-39c7956d42db.png)
 
 <br />
 <br />
@@ -42,7 +41,8 @@ commands:
     install     install the built kernel with pacman
     version     show kbuilder version
 ```
-During the build process, kbuilder will inject a bash shell into the PKGBUILD. This will spawn the shell right before `build()` is called, allowing you to add any patches or change the kernel config interactively.
+During the build process, kbuilder will inject a bash shell into the PKGBUILD.
+This will spawn the shell right before `build()` is called, allowing you to add any patches or change the kernel config interactively.
 
 #### Example usage
 To fetch the kernel sources and build the packages *linux-kbuilder-custom*, *linux-kbuilder-custom-headers* and *linux-kbuilder-custom-docs*:

@@ -1,4 +1,4 @@
-# kbuilder <br/> <a target="_blank" href="https://aur.archlinux.org/packages/kbuilder" title="AUR Version"><img src="https://img.shields.io/badge/AUR%20Stable-0.1.1-blue?style=flat-square&logo=archlinux"></a> <a target="_blank" href="https://github.com/AnnikaV9/kbuilder" title="Github Version"><img src="https://img.shields.io/badge/Github%20Dev-0.2.1-9cf?style=flat-square&logo=github"></a> <a target="_blank" href="https://github.com/AnnikaV9/kbuilder/blob/master/LICENSE" title="License"><img src="https://img.shields.io/badge/License-The%20Unlicense-red?style=flat-square"></a>
+# kbuilder <br/> <a target="_blank" href="https://aur.archlinux.org/packages/kbuilder" title="AUR Version"><img src="https://img.shields.io/badge/AUR%20Stable-0.2.1-blue?style=flat-square&logo=archlinux"></a> <a target="_blank" href="https://github.com/AnnikaV9/kbuilder" title="Github Version"><img src="https://img.shields.io/badge/Github%20Dev-0.2.1-9cf?style=flat-square&logo=github"></a> <a target="_blank" href="https://github.com/AnnikaV9/kbuilder/blob/master/LICENSE" title="License"><img src="https://img.shields.io/badge/License-The%20Unlicense-red?style=flat-square"></a>
 kbuilder is a bash script that allows you to build and install your own custom kernel packages with custom patches and configurations, for Arch Linux. It fetches the stock vanilla kernel's [PKGBUILD](https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/linux/trunk/PKGBUILD), and uses it as a template to build your custom kernel.
 
 <br />
@@ -38,7 +38,7 @@ commands:
 During the build process, kbuilder will inject a bash shell into the PKGBUILD. This will spawn the shell right before `build()` is called, allowing you to add any patches or change the kernel config interactively.
 
 #### Example usage
-To fetch the kernel sources and build the packages linux-kbuilder-custom, linux-kbuilder-custom-headers and linux-kbuilder-custom-docs:
+To fetch the kernel sources and build the packages *linux-kbuilder-custom*, *linux-kbuilder-custom-headers* and *linux-kbuilder-custom-docs*:
 ```
 kbuilder build
 ```

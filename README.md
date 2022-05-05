@@ -2,6 +2,12 @@
 kbuilder is a bash script that allows you to build and install your own custom kernel packages with custom patches and configurations, for Arch Linux. It fetches the stock vanilla kernel's [PKGBUILD](https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/linux/trunk/PKGBUILD), and uses it as a template to build your custom kernel.
 
 <br />
+
+![preview1](https://user-images.githubusercontent.com/68383195/166858395-e529bed8-9e13-4297-8ee4-dbb5fea345d7.png)
+![preview2](https://user-images.githubusercontent.com/68383195/166858398-95cfabf6-6757-4d0d-957f-2bb276d3c6ad.png)
+
+
+<br />
 <br />
 
 ## Installation

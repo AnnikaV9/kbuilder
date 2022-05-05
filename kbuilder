@@ -57,7 +57,7 @@ remove()
 check_and_create()
 {
     print nor "Checking $1"
-    [[ -d "$1" ]] && print low "$1 exists, removing..." && remove $1
+    [[ -d "$1" ]] && print low "$1 exists, removing" && remove $1
     print low "creating $1"
     mkdir -p $1 || print err "Could not create $1"
 }

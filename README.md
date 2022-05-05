@@ -33,6 +33,7 @@ makepkg -si
 
 ## Usage
 ```
+➜  ~ kbuilder help
 usage: kbuilder <command>
 
 commands:

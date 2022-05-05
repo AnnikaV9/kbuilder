@@ -27,7 +27,7 @@
 # For more information, please refer to <http://unlicense.org/>
 #
 
-VERSION="0.2.1"
+VERSION="0.2.2"
 DESC="A bash script for building custom kernel packages for Arch Linux"
 KBUILDER_DIR="$HOME/.kbuilder"
 HOOKS_DIR="/etc/kbuilder/hooks"
@@ -38,7 +38,7 @@ print()
 	case $1 in
 		err) echo "==> ERROR: $2" >&2 && exit 1 ;;
 		nor) echo "==> $2" ;;
-		low) echo " -> $2" ;;
+		low) echo "  -> $2" ;;
 		no) echo "$2" ;;
 		nonew) echo -n "$2" ;;
 		err_no) echo "$2" && echo "==> ERROR $3" >&2 && exit 1 ;;

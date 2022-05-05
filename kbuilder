@@ -32,7 +32,7 @@
 
 
 
-VERSION="0.1.0"
+VERSION="0.1.1"
 DESC="A bash script for building custom kernel packages for Arch Linux"
 KBUILDER_DIR="$HOME/.kbuilder"
 HOOKS_DIR="/etc/kbuilder/hooks"
@@ -182,7 +182,7 @@ command_build () {
     sed -i "s@pkgbase=linux@pkgbase=$KBUILDER_PKG_NAME@" $KBUILDER_DIR/cache/PKGBUILD || { print "ERROR: Could not set package name" ; exit 1; }
 
     print "==> Injecting bash shell and run-parts hook into PKGBUILD...."
-    sed -i "/  make olddefconfig/a \  run-parts --regex 'kbuilder-hook-*' $HOOKS_DIR" $KBUILDER_DIR/cache/PKGBUILD
+    sed -i "/  make olddefconfig/a \  run-parts --verbose --regex 'kbuilder-hook-*' $HOOKS_DIR" $KBUILDER_DIR/cache/PKGBUILD
     sed -i "/  run-parts/a \  echo ''; echo 'This is an injected shell, you can apply any patches or modify the config now. Exit the shell to continue the build.'; bash" $KBUILDER_DIR/cache/PKGBUILD
 
     print "==> Checking the KBUILDER_BUILD_JOBS variable..."

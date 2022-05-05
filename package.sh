@@ -3,8 +3,8 @@
 # Packages the kbuilder sources for makepkg
 #
 
-PKGNAME=kbuilder
-PKGVER=0.1.0
+PKGNAME="kbuilder"
+PKGVER="0.1.1"
 
 mkdir -v $PKGNAME-$PKGVER &&
 cp -v kbuilder $PKGNAME-$PKGVER/ &&

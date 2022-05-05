@@ -1,10 +1,9 @@
 # kbuilder <br/> <a target="_blank" href="https://aur.archlinux.org/packages/kbuilder" title="AUR Version"><img src="https://img.shields.io/badge/AUR%20Stable-0.2.2-blue?style=flat-square&logo=archlinux"></a> <a target="_blank" href="https://github.com/AnnikaV9/kbuilder" title="Github Version"><img src="https://img.shields.io/badge/Github%20Dev-0.2.2-9cf?style=flat-square&logo=github"></a> <a target="_blank" href="https://github.com/AnnikaV9/kbuilder/blob/master/LICENSE" title="License"><img src="https://img.shields.io/badge/License-The%20Unlicense-red?style=flat-square"></a>
 kbuilder is a bash script that allows you to build and install your own custom kernel packages with custom patches and configurations, for Arch Linux. It fetches the stock vanilla kernel's [PKGBUILD](https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/linux/trunk/PKGBUILD), and uses it as a template to build your custom kernel.
 
-<br />
+<br/>
 
-![preview1](https://user-images.githubusercontent.com/68383195/166893293-859aa2d9-d681-46d9-a9a9-af73f0db20b1.png)
-![preview2](https://user-images.githubusercontent.com/68383195/166893298-4f32b1cb-e28a-43aa-aec0-39c7956d42db.png)
+### <details><summary>Screenshots</summary><br /><img src="https://user-images.githubusercontent.com/68383195/166893293-859aa2d9-d681-46d9-a9a9-af73f0db20b1.png"/><br /><br /><img src="https://user-images.githubusercontent.com/68383195/166893298-4f32b1cb-e28a-43aa-aec0-39c7956d42db.png"/></details>
 
 <br />
 <br />

@@ -27,13 +27,12 @@
 # For more information, please refer to <http://unlicense.org/>
 #
 
-VERSION="0.1.1"
+VERSION="0.2.0"
 DESC="A bash script for building custom kernel packages for Arch Linux"
 KBUILDER_DIR="$HOME/.kbuilder"
 HOOKS_DIR="/etc/kbuilder/hooks"
 SOURCE_URL="https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/linux/trunk"
 
-# print function for printing output to the console
 print()
 {
 	case $1 in
@@ -41,68 +40,68 @@ print()
 		nor) echo "==> $2" ;;
 		low) echo " -> $2" ;;
 		no) echo "$2" ;;
-		nonew) echo -n " -> $2" ;;
+		nonew) echo -n "$2" ;;
+		err_nonew) echo -n "$2" && echo "==> ERROR $3" && exit 1 ;;
+		low_nonew) echo -n "  -> $2" ;;
+		nor_nonew) echo -n "==> $2" ;;
+		
 	esac
 }
 
 
-# Helper for removing
 remove()
 {
-    print nor "Deleting $1 $2"
-	rm -rf "$1" || print err "Could not delete $1"
+    rm -rf "$1" || print err "Could not delete $1"
 }
 
-create()
+check_and_create()
 {
-    print nor "Creating $1..."
-	print low "Checking if $1 exists..."
-    [[ -d "$1" ]] && print low "$1 exists, removing" && remove $KBUILDER_DIR/cache
+    print nor "Checking $1"
+    [[ -d "$1" ]] && print low "$1 exists, removing..." && remove $1
+    print low "creating $1"
     mkdir -p $1 || print err "Could not create $1"
 }
 
-# Install the built kernel with pacman and delete the cache directory
 command_install ()
 {
     [[ ! -d "$KBUILDER_DIR/cache" ]] && print err "Kernel hasn't been built yet"
 
-    print "==> Installing kernel packages with pacman..."
-	comm="pacman -U $KBUILDER_DIR/cache/*.pkg.tar.zst "
+    print nor "Installing kernel packages with pacman..."
+    comm="pacman -U $KBUILDER_DIR/cache/*.pkg.tar.zst "
     sudo $comm || print err "$comm did not complete successfully"
  
+    print nor "Deleting $KBUILDER/cache..."
     remove $KBUILDER_DIR/cache
 
     print nor "Kernel installed successfully"
 }
 
-
-
-# Fetch PKGBUILD and config, modify the PKGBUILD and build the kernel like any other aur package
 command_build ()
 {
-	create $KBUILDER_DIR/cache
+    check_and_create $KBUILDER_DIR/cache
  
-	for fetch in PKGBUILD config; do
-    	print nonew "==> Fetching $fetch... "
-    	curl --silent -o $KBUILDER_DIR/cache/$fetch $SOURCE_URL/$fetch || print nonew "fail" && print no "done"
-	done
-
-	if [[ -z "$KBUILDER_PKG_NAME" ]]; then
-    	print low "KBUILDER_PKG_NAME is invalid, using default: linux-kbuilder-custom"
-    	KBUILDER_PKG_NAME="kbuilder-linux-custom"
+    for fetch in PKGBUILD config; do
+    	print nor_nonew "Fetching $fetch... "
+    	curl --silent -o $KBUILDER_DIR/cache/$fetch $SOURCE_URL/$fetch || print err_nonew "fail" "Could not fetch $fetch" && print no "done"
+    done
+    
+    print nor "Setting package name..."
+    if [[ -z "$KBUILDER_PKG_NAME" ]]; then
+    	print low "KBUILDER_PKG_NAME is invalid, injecting default name 'linux-kbuilder-custom' into PKGBUILD"
+    	KBUILDER_PKG_NAME="linux-kbuilder-custom"
     else
-    	print low "variable is set to $KBUILDER_PKG_NAME"
+    	print low "KBUILDER_PKG_NAME is set to $KBUILDER_PKG_NAME, injecting into PKGBUILD"
     fi
 
-    print nor "Setting package name to $KBUILDER_PKG_NAME..."
     sed -i "s@pkgbase=linux@pkgbase=$KBUILDER_PKG_NAME@" $KBUILDER_DIR/cache/PKGBUILD || print err "Could not set package name"
 
     print nor "Injecting bash shell and run-parts hook into PKGBUILD...."
-    sed -i "/  make olddefconfig/a \  run-parts --regex 'kbuilder-hook-*' $HOOKS_DIR" $KBUILDER_DIR/cache/PKGBUILD
-    sed -i "/  run-parts/a \  echo ''; echo 'This is an injected shell, you can apply any patches or modify the config now. Exit the shell to continue the build.'; bash" $KBUILDER_DIR/cache/PKGBUILD
+    sed -i "/  make olddefconfig/a \  run-parts --regex 'kbuilder-hook-*' $HOOKS_DIR" $KBUILDER_DIR/cache/PKGBUILD || print err "Could not inject run-parts hook into PKGBUILD"
+    sed -i "/  run-parts/a \  echo ''; echo 'This is an injected shell, you can apply any patches or modify the config now. Exit the shell to continue the build.'; bash" $KBUILDER_DIR/cache/PKGBUILD || print err "Could not inject bash shell into PKGBUILD"
 
+    print nor "Setting build jobs..."
     if [[ -z "$KBUILDER_BUILD_JOBS" ]]; then
-        print low "KBUILDER_BUILD_JOBS is invalid, using make's default"
+        print low "KBUILDER_BUILD_JOBS is invalid, using PKGBUILD's default"
     else
         print low "KBUILDER_BUILD_JOBS is set to $KBUILDER_BUILD_JOBS, injecting argument into PKGBUILD"
         sed -i "s@make all@make -j$KBUILDER_BUILD_JOBS all@" $KBUILDER_DIR/cache/PKGBUILD || print err "Could not inject argument into PKGBUILD"
@@ -119,13 +118,12 @@ command_build ()
 
 }
 
-# Help message
 help()
 {
     cat <<-EOF
-usage: kbuilder [help] [build] [install]
+usage: kbuilder <command>
 
-options:
+commands:
     help        show this message
     build       fetch and build a kernel with makepkg
     install     install the built kernel with pacman
@@ -133,7 +131,6 @@ options:
 EOF
 }
 
-# Action helper
 action()
 {
 	[[ $EUID = "0" ]] && print err "kbuilder should not be run as root."
@@ -143,7 +140,6 @@ action()
 	command_$1
 }
 
-# Main command parser
 case "$1" in
 	install) action install ;;
 	build) action build ;;

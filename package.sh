@@ -4,7 +4,7 @@
 #
 
 PKGNAME="kbuilder"
-PKGVER="0.2.0"
+PKGVER="0.2.1"
 
 mkdir -v $PKGNAME-$PKGVER &&
 cp -v kbuilder $PKGNAME-$PKGVER/ &&

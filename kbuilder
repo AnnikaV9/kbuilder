@@ -27,7 +27,7 @@
 # For more information, please refer to <http://unlicense.org/>
 #
 
-VERSION="0.2.0"
+VERSION="0.2.1"
 DESC="A bash script for building custom kernel packages for Arch Linux"
 KBUILDER_DIR="$HOME/.kbuilder"
 HOOKS_DIR="/etc/kbuilder/hooks"
@@ -41,7 +41,7 @@ print()
 		low) echo " -> $2" ;;
 		no) echo "$2" ;;
 		nonew) echo -n "$2" ;;
-		err_nonew) echo -n "$2" && echo "==> ERROR $3" && exit 1 ;;
+		err_no) echo "$2" && echo "==> ERROR $3" >&2 && exit 1 ;;
 		low_nonew) echo -n "  -> $2" ;;
 		nor_nonew) echo -n "==> $2" ;;
 		
@@ -79,10 +79,11 @@ command_install ()
 command_build ()
 {
     check_and_create $KBUILDER_DIR/cache
- 
+    
+    print nor "Fetching required files..."
     for fetch in PKGBUILD config; do
-    	print nor_nonew "Fetching $fetch... "
-    	curl --silent -o $KBUILDER_DIR/cache/$fetch $SOURCE_URL/$fetch || print err_nonew "fail" "Could not fetch $fetch" && print no "done"
+    	print low_nonew "$fetch... "
+    	curl --silent -o $KBUILDER_DIR/cache/$fetch $SOURCE_URL/$fetch || print err_no "fail" "Could not fetch $fetch" && print no "done"
     done
     
     print nor "Setting package name..."

@@ -1,5 +1,5 @@
 pkgname=kbuilder
-pkgver=0.2.1
+pkgver=0.2.2
 pkgrel=1
 pkgdesc="A bash script for building custom kernel packages for Arch Linux"
 arch=("x86_64")

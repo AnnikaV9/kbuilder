@@ -31,7 +31,8 @@ makepkg -si
 
 ## Usage
 ```
-➜  ~ kbuilder help
+$ kbuilder help
+
 usage: kbuilder <command>
 
 commands:
@@ -90,8 +91,8 @@ patch -Np1 -i "$PATCH" || { echo -e "$HOOK_NAME failed when applying $PATCH" ; e
 
 To create and enable a hook:
 ```
-vim xx-builder-hook-hookname
-sudo cp xx-builder-hook-hookname /etc/kbuilder/hooks/
+vim xx-kbuilder-hook-hookname
+sudo cp xx-kbuilder-hook-hookname /etc/kbuilder/hooks/
 sudo chmod +x /etc/kbuilder/hooks/xx-kbuilder-hook-hookname
 ```
 Where *xx* is a number which would change depending on the hook's order.

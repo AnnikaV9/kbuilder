@@ -27,7 +27,7 @@
 # For more information, please refer to <http://unlicense.org/>
 #
 
-VERSION="0.2.2"
+VERSION="0.2.3"
 DESC="A bash script for building custom kernel packages for Arch Linux"
 KBUILDER_DIR="$HOME/.kbuilder"
 HOOKS_DIR="/etc/kbuilder/hooks"
@@ -70,7 +70,7 @@ command_install ()
     comm="pacman -U $KBUILDER_DIR/cache/*.pkg.tar.zst "
     sudo $comm || print err "$comm did not complete successfully"
  
-    print nor "Deleting $KBUILDER/cache..."
+    print nor "Deleting $KBUILDER_DIR/cache..."
     remove $KBUILDER_DIR/cache
 
     print nor "Kernel installed successfully"
@@ -136,7 +136,7 @@ action()
 {
 	[[ $EUID = "0" ]] && print err "kbuilder should not be run as root."
 	for dep in curl makepkg sudo sed rm cd cat mkdir run-parts; do
-		command -v $dep >/dev/null || print err "$dep is not installed"
+		command -v $dep >/dev/null || print err "command '$dep' is not available"
 	done
 	command_$1
 }

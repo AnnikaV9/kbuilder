@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Packages the kbuilder sources for makepkg
+# Package the kbuilder sources for makepkg
 #
 
 PKGNAME="kbuilder"

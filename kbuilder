@@ -27,14 +27,13 @@
 # For more information, please refer to <http://unlicense.org/>
 #
 
-VERSION="0.2.5"
+VERSION="0.3.0"
 DESC="A bash script for building custom kernel packages for Arch Linux"
 KBUILDER_DIR="$HOME/.kbuilder"
 HOOKS_DIR="/etc/kbuilder/hooks"
-SOURCE_URL="https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/linux/trunk"
+SOURCE_URL="https://raw.githubusercontent.com/archlinux/svntogit-packages/packages"
 
-print()
-{
+print() {
     case $1 in
         err) echo "==> ERROR: $2" >&2 && exit 1 ;;
         nor) echo "==> $2" ;;
@@ -49,21 +48,18 @@ print()
 }
 
 
-remove()
-{
+remove() {
     rm -rf "$1" || print err "Could not delete $1"
 }
 
-check_and_create()
-{
+check_and_create() {
     print nor "Checking $1"
     [[ -d "$1" ]] && print low "$1 exists, removing" && remove $1
     print low "creating $1"
     mkdir -p $1 || print err "Could not create $1"
 }
 
-command_install ()
-{
+command_install () {
     [[ ! -d "$KBUILDER_DIR/cache" ]] && print err "Kernel hasn't been built yet"
 
     print nor "Installing kernel packages with pacman..."
@@ -76,37 +72,53 @@ command_install ()
     print nor "Kernel installed successfully"
 }
 
-command_build ()
-{
+command_build () {
     check_and_create $KBUILDER_DIR/cache
     
+    print nor "Resolving source package..."
+    if [[ -z "$KBUILDER_SOURCE_PKG" ]]; then
+        print low "using default 'linux'"
+        KBUILDER_SOURCE_PKG="linux"
+    else
+        if [[ "linux linux-lts linux-zen linux-hardened" =~ (" "|^)$KBUILDER_SOURCE_PKG(" "|$) ]]; then
+            print low "using '$KBUILDER_SOURCE_PKG'"
+        else
+            print low "$KBUILDER_SOURCE_PKG is not supported, using default 'linux'"
+            KBUILDER_SOURCE_PKG="linux"
+        fi
+    fi
+
     print nor "Fetching required files..."
     for fetch in PKGBUILD config; do
     	print low_nonew "$fetch... "
-    	curl --silent -o $KBUILDER_DIR/cache/$fetch $SOURCE_URL/$fetch || print err_no "fail" "Could not fetch $fetch" && print no "done"
+    	curl --silent -o $KBUILDER_DIR/cache/$fetch "$SOURCE_URL/$KBUILDER_SOURCE_PKG/trunk/$fetch" || print err_no "fail" "Could not fetch $fetch" && print no "done"
     done
     
     print nor "Setting package name..."
-    if [[ -z "$KBUILDER_PKG_NAME" ]]; then
-    	print low "KBUILDER_PKG_NAME is invalid, injecting default name 'linux-kbuilder-custom' into PKGBUILD"
-    	KBUILDER_PKG_NAME="linux-kbuilder-custom"
-    else
-    	print low "KBUILDER_PKG_NAME is set to $KBUILDER_PKG_NAME, injecting into PKGBUILD"
+    def=""
+    if [[ -z "$KBUILDER_PKG_NAME_APPEND" ]]; then
+        KBUILDER_PKG_NAME_APPEND="kbuilder-custom"
+        PKGNAME="$KBUILDER_SOURCE_PKG-kbuilder-custom"
+        def="default "
     fi
-
-    sed -i "s@pkgbase=linux@pkgbase=$KBUILDER_PKG_NAME@" $KBUILDER_DIR/cache/PKGBUILD || print err "Could not set package name"
+    PKGNAME="$KBUILDER_SOURCE_PKG-$KBUILDER_PKG_NAME_APPEND"
+    print low "using $def'$PKGNAME'"
+    sed -i "s@pkgbase=$KBUILDER_SOURCE_PKG@pkgbase=$PKGNAME@" $KBUILDER_DIR/cache/PKGBUILD || print err "Could not set package name"
 
     print nor "Injecting bash shell and run-parts hook into PKGBUILD...."
     sed -i "/  make olddefconfig/a \  run-parts --verbose --regex 'kbuilder-hook-*' $HOOKS_DIR" $KBUILDER_DIR/cache/PKGBUILD || print err "Could not inject run-parts hook into PKGBUILD"
     sed -i "/  run-parts/a \  echo ''; echo 'This is an injected shell, you can apply any patches or modify the config now. Exit the shell to continue the build.'; bash" $KBUILDER_DIR/cache/PKGBUILD || print err "Could not inject bash shell into PKGBUILD"
 
     print nor "Setting build jobs..."
-    if [[ -z "$KBUILDER_BUILD_JOBS" ]]; then
-        print low "KBUILDER_BUILD_JOBS is invalid, using PKGBUILD's default"
-    else
-        print low "KBUILDER_BUILD_JOBS is set to $KBUILDER_BUILD_JOBS, injecting argument into PKGBUILD"
-        sed -i "s@make all@make -j$KBUILDER_BUILD_JOBS all@" $KBUILDER_DIR/cache/PKGBUILD || print err "Could not inject argument into PKGBUILD"
-    fi
+    case $KBUILDER_BUILD_JOBS in
+        ''|*[!0-9]*) 
+            print low "using PKGBUILD's default"
+            ;;
+        *) 
+            print low "using '-j$KBUILDER_BUILD_JOBS'"
+            sed -i "s@make all@make -j$KBUILDER_BUILD_JOBS all@" $KBUILDER_DIR/cache/PKGBUILD || print err "Could not inject argument into PKGBUILD"
+            ;;
+    esac
   
     print nor "Commenting out 'make htmldocs' in PKGBUILD..."
     sed -i "s@make htmldocs@#make htmldocs@" $KBUILDER_DIR/cache/PKGBUILD || print err "Could not uncomment 'make htmldocs' in PKGBUILD"
@@ -116,11 +128,9 @@ command_build ()
 
     print nor "Running makepkg..."
     makepkg -s --skippgpcheck || print err "Command 'makepkg -s --skippgpcheck' did not complete successfully"
-
 }
 
-help()
-{
+help() {
     cat <<-EOF
 Usage: kbuilder <command>
 
@@ -134,8 +144,7 @@ Report bugs at github.com/AnnikaV9/kbuilder
 EOF
 }
 
-action()
-{
+action() {
     [[ $EUID = "0" ]] && print err "kbuilder should not be run as root."
     for dep in curl makepkg sudo sed rm cd cat mkdir run-parts; do
         command -v $dep >/dev/null || print err "Command '$dep' is not available"

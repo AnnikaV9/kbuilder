@@ -1,5 +1,5 @@
 pkgname=kbuilder
-pkgver=0.2.5
+pkgver=0.3.0
 pkgrel=1
 pkgdesc="Build script for custom kernels"
 arch=("x86_64")
@@ -12,7 +12,6 @@ source=("$pkgname-$pkgver.tar.gz")
 package() {
   install -Dm755 "$srcdir/$pkgname-$pkgver/kbuilder" "$pkgdir/usr/bin/kbuilder"
   install -Dm644 "$srcdir/$pkgname-$pkgver/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-  install -Dm644 "$srcdir/$pkgname-$pkgver/documentation.html" "$pkgdir/usr/share/doc/$pkgname/documentation.html"
   install -Dm644 "$srcdir/$pkgname-$pkgver/kbuilder.1.gz" "$pkgdir/usr/share/man/man1/kbuilder.1.gz"
   sudo mkdir -p /etc/kbuilder/hooks
 }

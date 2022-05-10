@@ -6,10 +6,13 @@
 PKGNAME="kbuilder"
 PKGVER="0.2.4"
 
+pandoc doc/$PKGNAME.1.md -s -t man $PKGNAME.1
+gzip $PKGNAME.1
 mkdir -v $PKGNAME-$PKGVER &&
 cp -v kbuilder $PKGNAME-$PKGVER/ &&
 cp -v LICENSE $PKGNAME-$PKGVER/ &&
 cp -v doc/documentation.html $PKGNAME-$PKGVER/ &&
+cp -v $PKGNAME.1.gz $PKGNAME-$PKGVER/ &&
 tar czvf $PKGNAME-$PKGVER.tar.gz * &&
 archive_digest=$(b2sum $PKGNAME-$PKGVER.tar.gz) &&
 suffix="  $PKGNAME-$PKGVER.tar.gz" &&

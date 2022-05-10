@@ -11,9 +11,7 @@ Install the stable version from:
     https://aur.archlinux.org/packages/kbuilder
 
 
-Install the development version:
-    $ git clone https://github.com/AnnikaV9/kbuilder.git
-    $ cd kbuilder
+Install the development version in this repository:
     $ bash package.sh
     $ cat PKGBUILD
     $ makepkg -si

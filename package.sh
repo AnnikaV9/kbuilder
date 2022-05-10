@@ -6,6 +6,7 @@
 PKGNAME="kbuilder"
 PKGVER="0.3.0"
 
+pandoc doc/$PKGNAME.1.md -s -t man -o doc/$PKGNAME.1 && 
 gzip -v -9 doc/$PKGNAME.1 &&
 mkdir -v -p tmp/$PKGNAME-$PKGVER &&
 cp -v kbuilder tmp/$PKGNAME-$PKGVER/ &&

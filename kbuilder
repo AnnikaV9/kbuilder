@@ -27,7 +27,7 @@
 # For more information, please refer to <http://unlicense.org/>
 #
 
-VERSION="0.2.3"
+VERSION="0.2.4"
 DESC="A bash script for building custom kernel packages for Arch Linux"
 KBUILDER_DIR="$HOME/.kbuilder"
 HOOKS_DIR="/etc/kbuilder/hooks"
@@ -35,17 +35,16 @@ SOURCE_URL="https://raw.githubusercontent.com/archlinux/svntogit-packages/packag
 
 print()
 {
-	case $1 in
-		err) echo "==> ERROR: $2" >&2 && exit 1 ;;
-		nor) echo "==> $2" ;;
-		low) echo "  -> $2" ;;
-		no) echo "$2" ;;
-		nonew) echo -n "$2" ;;
-		err_no) echo "$2" && echo "==> ERROR $3" >&2 && exit 1 ;;
-		low_nonew) echo -n "  -> $2" ;;
-		nor_nonew) echo -n "==> $2" ;;
-		
-	esac
+    case $1 in
+        err) echo "==> ERROR: $2" >&2 && exit 1 ;;
+        nor) echo "==> $2" ;;
+        low) echo "  -> $2" ;;
+        no) echo "$2" ;;
+        nonew) echo -n "$2" ;;
+        err_no) echo "$2" && echo "==> ERROR $3" >&2 && exit 1 ;;
+        low_nonew) echo -n "  -> $2" ;;
+        nor_nonew) echo -n "==> $2" ;;
+    esac
 }
 
 
@@ -134,16 +133,16 @@ EOF
 
 action()
 {
-	[[ $EUID = "0" ]] && print err "kbuilder should not be run as root."
-	for dep in curl makepkg sudo sed rm cd cat mkdir run-parts; do
-		command -v $dep >/dev/null || print err "command '$dep' is not available"
-	done
-	command_$1
+    [[ $EUID = "0" ]] && print err "kbuilder should not be run as root."
+    for dep in curl makepkg sudo sed rm cd cat mkdir run-parts; do
+        command -v $dep >/dev/null || print err "command '$dep' is not available"
+    done
+    command_$1
 }
 
 case "$1" in
-	install) action install ;;
-	build) action build ;;
-	version) print no "kbuilder $VERSION" ;;
-	*) help ;;
+    install) action install ;;
+    build) action build ;;
+    version) print no "kbuilder $VERSION" ;;
+    *) help ;;
 esac

@@ -6,13 +6,16 @@
 PKGNAME="kbuilder"
 PKGVER="0.2.5"
 
-gzip -v -9 doc/$PKGNAME.1
-mkdir -v $PKGNAME-$PKGVER &&
-cp -v kbuilder $PKGNAME-$PKGVER/ &&
-cp -v LICENSE $PKGNAME-$PKGVER/ &&
-cp -v doc/documentation.html $PKGNAME-$PKGVER/ &&
-cp -v doc/$PKGNAME.1.gz $PKGNAME-$PKGVER/ &&
+gzip -v -9 doc/$PKGNAME.1 &&
+mkdir -v -p tmp/$PKGNAME-$PKGVER &&
+cp -v kbuilder tmp/$PKGNAME-$PKGVER/ &&
+cp -v LICENSE tmp/$PKGNAME-$PKGVER/ &&
+cp -v doc/documentation.html tmp/$PKGNAME-$PKGVER/ &&
+cp -v doc/$PKGNAME.1.gz tmp/$PKGNAME-$PKGVER/ &&
+cd tmp &&
 tar czvf $PKGNAME-$PKGVER.tar.gz * &&
+mv $PKGNAME-$PKGVER.tar.gz ../ &&
+cd .. &&
 archive_digest=$(b2sum $PKGNAME-$PKGVER.tar.gz) &&
 suffix="  $PKGNAME-$PKGVER.tar.gz" &&
 archive_digest_raw=${archive_digest%"$suffix"} &&

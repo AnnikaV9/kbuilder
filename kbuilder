@@ -27,7 +27,7 @@
 # For more information, please refer to <http://unlicense.org/>
 #
 
-VERSION="0.2.4"
+VERSION="0.2.5"
 DESC="A bash script for building custom kernel packages for Arch Linux"
 KBUILDER_DIR="$HOME/.kbuilder"
 HOOKS_DIR="/etc/kbuilder/hooks"
@@ -121,13 +121,15 @@ command_build ()
 help()
 {
     cat <<-EOF
-usage: kbuilder <command>
+Usage: kbuilder <command>
 
-commands:
-    help        show this message
-    build       fetch and build a kernel with makepkg
-    install     install the built kernel with pacman
-    version     show kbuilder version
+Commands:
+    help        Show this message
+    build       Fetch and build a kernel with makepkg
+    install     Install the built kernel with pacman
+    version     Show kbuilder version
+
+Report bugs at github.com/AnnikaV9/kbuilder
 EOF
 }
 
@@ -135,14 +137,17 @@ action()
 {
     [[ $EUID = "0" ]] && print err "kbuilder should not be run as root."
     for dep in curl makepkg sudo sed rm cd cat mkdir run-parts; do
-        command -v $dep >/dev/null || print err "command '$dep' is not available"
+        command -v $dep >/dev/null || print err "Command '$dep' is not available"
     done
     command_$1
 }
 
 case "$1" in
+    help) help ;;
+    --help) help ;;
+    -h) help ;;
     install) action install ;;
     build) action build ;;
     version) print no "kbuilder $VERSION" ;;
-    *) help ;;
+    *) print err "No valid command provided" && help ;;
 esac

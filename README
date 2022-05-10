@@ -6,6 +6,7 @@ patches and configurations in Arch Linux.
 Documentation at:
     - https://wiki.archlinux.org/title/Kbuilder
     - doc/documentation.html
+    - /usr/share/doc/kbuilder/documentation.html (After installation)
 
 
 Install the stable version from:

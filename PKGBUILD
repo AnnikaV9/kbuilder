@@ -1,6 +1,6 @@
 pkgname=kbuilder
-pkgver=0.2.3
-pkgrel=2
+pkgver=0.2.4
+pkgrel=1
 pkgdesc="A bash script for building custom kernel packages for Arch Linux"
 arch=("x86_64")
 url="https://github.com/AnnikaV9/$pkgname"

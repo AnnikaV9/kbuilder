@@ -127,7 +127,7 @@ Commands:
     help        Show this message
     build       Fetch and build a kernel with makepkg
     install     Install the built kernel with pacman
-    version     Show kbuilder version
+    version     Show installed version
 
 Report bugs at github.com/AnnikaV9/kbuilder
 EOF

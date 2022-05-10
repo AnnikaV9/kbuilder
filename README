@@ -1,6 +1,6 @@
  __________
 | kbuilder |
- ‾‾‾‾‾‾‾‾‾‾
+ ¯¯¯¯¯¯¯¯¯¯
   
 Kernel package build script for Arch Linux that builds and installs your
 own custom kernel packages with custom patches and configurations.

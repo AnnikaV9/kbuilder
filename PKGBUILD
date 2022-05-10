@@ -1,6 +1,6 @@
 pkgname=kbuilder
 pkgver=0.2.3
-pkgrel=1
+pkgrel=2
 pkgdesc="A bash script for building custom kernel packages for Arch Linux"
 arch=("x86_64")
 url="https://github.com/AnnikaV9/$pkgname"
@@ -12,5 +12,6 @@ source=("$pkgname-$pkgver.tar.gz")
 package() {
   install -Dm755 "$srcdir/$pkgname-$pkgver/kbuilder" "$pkgdir/usr/bin/kbuilder"
   install -Dm644 "$srcdir/$pkgname-$pkgver/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 "$srcdir/$pkgname-$pkgver/documentation.html" "$pkgdir/usr/share/doc/$pkgname/documentation.html"
   sudo mkdir -p /etc/kbuilder/hooks
 }

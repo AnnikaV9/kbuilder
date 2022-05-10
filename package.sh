@@ -6,7 +6,7 @@
 PKGNAME="kbuilder"
 PKGVER="0.2.4"
 
-gzip doc/$PKGNAME.1
+gzip -v -9 doc/$PKGNAME.1
 mkdir -v $PKGNAME-$PKGVER &&
 cp -v kbuilder $PKGNAME-$PKGVER/ &&
 cp -v LICENSE $PKGNAME-$PKGVER/ &&

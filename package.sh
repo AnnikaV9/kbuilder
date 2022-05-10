@@ -4,7 +4,7 @@
 #
 
 PKGNAME="kbuilder"
-PKGVER="0.2.5"
+PKGVER="0.3.0"
 
 gzip -v -9 doc/$PKGNAME.1 &&
 mkdir -v -p tmp/$PKGNAME-$PKGVER &&

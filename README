@@ -6,12 +6,8 @@ A bash script for Arch Linux that allows you to build one of the
 four officially supported kernels locally with your own optional 
 patches and configuration, under a different package name.
 
-For example, you could fetch the sources of the linux-lts kernel, 
-apply a patch that optimizes the kernel for intel processors, 
-and install that kernel as linux-lts-intel-optimized.
 
-
-Documentation at:
+Read the documentation at:
     https://wiki.archlinux.org/title/Kbuilder
 
 

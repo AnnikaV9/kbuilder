@@ -1,9 +1,14 @@
  __________
 | kbuilder |
  ¯¯¯¯¯¯¯¯¯¯
-  
-Kernel package build script for Arch Linux that builds and installs your
-own custom kernel packages with custom patches and configurations.
+
+A bash script for Arch Linux that allows you to build one of the
+four officially supported kernels locally with your own optional 
+patches and configuration, under a different package name.
+
+For example, you could fetch the sources of the linux-lts kernel, 
+apply a patch that optimizes the kernel for intel processors, 
+and install that kernel as linux-lts-intel-optimized.
 
 
 Documentation at:

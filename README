@@ -19,4 +19,4 @@ Install the stable version from:
 Install the development version in this repository:
     $ bash package.sh
     $ cat PKGBUILD
-    $ makepkg --syncdeps --install
+    $ makepkg -si

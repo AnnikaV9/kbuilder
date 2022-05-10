@@ -1,7 +1,7 @@
 pkgname=kbuilder
 pkgver=0.2.4
 pkgrel=1
-pkgdesc="Kernel package build script"
+pkgdesc="Build script that builds and installs your own custom kernel packages with custom patches and configurations"
 arch=("x86_64")
 url="https://github.com/AnnikaV9/$pkgname"
 license=("Unlicense")

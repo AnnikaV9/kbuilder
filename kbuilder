@@ -44,6 +44,7 @@ print()
         err_no) echo "$2" && echo "==> ERROR $3" >&2 && exit 1 ;;
         low_nonew) echo -n "  -> $2" ;;
         nor_nonew) echo -n "==> $2" ;;
+        err_h) echo "==> ERROR: $2" >&2 && help && exit 1 ;;
     esac
 }
 
@@ -149,5 +150,5 @@ case "$1" in
     install) action install ;;
     build) action build ;;
     version) print no "kbuilder $VERSION" ;;
-    *) print err "No valid command provided" && help ;;
+    *) print err_h "No valid command provided"  ;;
 esac

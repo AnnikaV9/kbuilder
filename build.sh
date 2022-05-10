@@ -11,7 +11,6 @@ gzip -v -9 doc/$PKGNAME.1 &&
 mkdir -v -p tmp/$PKGNAME-$PKGVER &&
 cp -v kbuilder tmp/$PKGNAME-$PKGVER/ &&
 cp -v LICENSE tmp/$PKGNAME-$PKGVER/ &&
-cp -v doc/documentation.html tmp/$PKGNAME-$PKGVER/ &&
 cp -v doc/$PKGNAME.1.gz tmp/$PKGNAME-$PKGVER/ &&
 cd tmp &&
 tar czvf $PKGNAME-$PKGVER.tar.gz * &&

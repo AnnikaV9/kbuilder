@@ -16,6 +16,6 @@ Install the stable version from:
 
 
 Install the development version in this repository:
-    $ bash build.sh
+    $ bash package.sh
     $ cat PKGBUILD
     $ makepkg -si

@@ -1,6 +1,6 @@
-% KBUILDER(1) kbuilder 0.3.0
+% KBUILDER(1) kbuilder 0.3.1
 % AnnikaV9 (github.com/AnnikaV9), wael444 (github.com/AnnikaV9)
-% 10 May 2022
+% 26 June 2022
 
 # NAME
 kbuilder - Build and install your own custom kernel packages.

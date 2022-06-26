@@ -27,7 +27,7 @@
 # For more information, please refer to <http://unlicense.org/>
 #
 
-VERSION="0.3.0"
+VERSION="0.3.1"
 DESC="A bash script for building custom kernel packages for Arch Linux"
 KBUILDER_DIR="$HOME/.kbuilder"
 HOOKS_DIR="/etc/kbuilder/hooks"
@@ -77,11 +77,11 @@ command_build () {
     
     print nor "Resolving source package..."
     if [[ -z "$KBUILDER_SOURCE_PKG" ]]; then
-        print low "using default 'linux'"
+        print low "Using default 'linux'"
         KBUILDER_SOURCE_PKG="linux"
     else
         if [[ "linux linux-lts linux-zen linux-hardened" =~ (" "|^)$KBUILDER_SOURCE_PKG(" "|$) ]]; then
-            print low "using '$KBUILDER_SOURCE_PKG'"
+            print low "Using '$KBUILDER_SOURCE_PKG'"
         else
             print low "$KBUILDER_SOURCE_PKG is not supported, using default 'linux'"
             KBUILDER_SOURCE_PKG="linux"
@@ -102,7 +102,7 @@ command_build () {
         def="default "
     fi
     PKGNAME="$KBUILDER_SOURCE_PKG-$KBUILDER_PKG_NAME_APPEND"
-    print low "using $def'$PKGNAME'"
+    print low "Using $def'$PKGNAME'"
     sed -i "s@pkgbase=$KBUILDER_SOURCE_PKG@pkgbase=$PKGNAME@" $KBUILDER_DIR/cache/PKGBUILD || print err "Could not set package name"
 
     print nor "Injecting bash shell and run-parts hook into PKGBUILD...."
@@ -112,17 +112,14 @@ command_build () {
     print nor "Setting build jobs..."
     case $KBUILDER_BUILD_JOBS in
         ''|*[!0-9]*) 
-            print low "using PKGBUILD's default"
+            print low "Using PKGBUILD's default"
             ;;
         *) 
-            print low "using '-j$KBUILDER_BUILD_JOBS'"
-            sed -i "s@make all@make -j$KBUILDER_BUILD_JOBS all@" $KBUILDER_DIR/cache/PKGBUILD || print err "Could not inject argument into PKGBUILD"
+            print low "Using '-j$KBUILDER_BUILD_JOBS'"
+            sed -i "s@make htmldocs all@make -j$KBUILDER_BUILD_JOBS all@" $KBUILDER_DIR/cache/PKGBUILD || print err "Could not inject argument into PKGBUILD"
             ;;
     esac
-  
-    print nor "Commenting out 'make htmldocs' in PKGBUILD..."
-    sed -i "s@make htmldocs@#make htmldocs@" $KBUILDER_DIR/cache/PKGBUILD || print err "Could not uncomment 'make htmldocs' in PKGBUILD"
-  
+
     print nor "Entering $KBUILDER_DIR/cache..."
     cd $KBUILDER_DIR/cache
 
@@ -140,7 +137,7 @@ Commands:
     install     Install the built kernel with pacman
     version     Show installed version
 
-Report bugs at github.com/AnnikaV9/kbuilder
+Report bugs at https://github.com/AnnikaV9/kbuilder/issues
 EOF
 }
 

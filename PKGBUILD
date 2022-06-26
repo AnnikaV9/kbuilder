@@ -1,5 +1,5 @@
 pkgname=kbuilder
-pkgver=0.3.0
+pkgver=0.3.1
 pkgrel=1
 pkgdesc="Build script for custom kernels"
 arch=("x86_64")

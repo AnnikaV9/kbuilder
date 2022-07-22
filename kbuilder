@@ -138,7 +138,7 @@ Commands:
     help        Show this message
     build       Fetch and build a kernel with makepkg
     install     Install the built kernel with pacman
-    version     Show installed version
+    version     Show kbuilder version
 
 Refer to man page for more information,
 Report bugs at https://github.com/AnnikaV9/kbuilder/issues

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 #
-# A bash script for building custom kernel packages for Arch Linux.
+# Bash script for building custom kernels in Arch Linux.
+#
 # This is free and unencumbered software released into the public domain.
 #
 # Anyone is free to copy, modify, publish, use, compile, sell, or
@@ -27,8 +28,8 @@
 # For more information, please refer to <http://unlicense.org/>
 #
 
-VERSION="0.3.1"
-DESC="A bash script for building custom kernel packages for Arch Linux"
+VERSION="0.3.2"
+DESC="Bash script for building custom kernels in Arch Linux"
 KBUILDER_DIR="$HOME/.kbuilder"
 HOOKS_DIR="/etc/kbuilder/hooks"
 SOURCE_URL="https://raw.githubusercontent.com/archlinux/svntogit-packages/packages"
@@ -40,7 +41,7 @@ print() {
         low) echo "  -> $2" ;;
         no) echo "$2" ;;
         nonew) echo -n "$2" ;;
-        err_no) echo "$2" && echo "==> ERROR $3" >&2 && exit 1 ;;
+        err_no) echo "$2" && echo "==> ERROR: $3" >&2 && exit 1 ;;
         low_nonew) echo -n "  -> $2" ;;
         nor_nonew) echo -n "==> $2" ;;
         err_h) echo "==> ERROR: $2" >&2 && help && exit 1 ;;
@@ -55,7 +56,7 @@ remove() {
 check_and_create() {
     print nor "Checking $1"
     [[ -d "$1" ]] && print low "$1 exists, removing" && remove $1
-    print low "creating $1"
+    print low "Creating $1"
     mkdir -p $1 || print err "Could not create $1"
 }
 
@@ -131,12 +132,15 @@ help() {
     cat <<-EOF
 Usage: kbuilder <command>
 
+$DESC
+
 Commands:
     help        Show this message
     build       Fetch and build a kernel with makepkg
     install     Install the built kernel with pacman
     version     Show installed version
 
+Refer to man page for more information,
 Report bugs at https://github.com/AnnikaV9/kbuilder/issues
 EOF
 }
@@ -156,5 +160,8 @@ case "$1" in
     install) action install ;;
     build) action build ;;
     version) print no "kbuilder $VERSION" ;;
+    --version) print no "kbuilder $VERSION" ;;
+    -v) print no "kbuilder $VERSION" ;;
+    -V) print no "kbuilder $VERSION" ;;
     *) print err_h "No valid command provided"  ;;
 esac

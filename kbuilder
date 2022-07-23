@@ -28,7 +28,7 @@
 # For more information, please refer to <http://unlicense.org/>
 #
 
-VERSION="0.3.2"
+VERSION="0.3.3"
 DESC="Bash script for building custom kernels in Arch Linux"
 KBUILDER_DIR="$HOME/.kbuilder"
 HOOKS_DIR="/etc/kbuilder/hooks"
@@ -110,6 +110,11 @@ command_build () {
     sed -i "/  make olddefconfig/a \  run-parts --verbose --regex 'kbuilder-hook-*' $HOOKS_DIR" $KBUILDER_DIR/cache/PKGBUILD || print err "Could not inject run-parts hook into PKGBUILD"
     sed -i "/  run-parts/a \  echo ''; echo 'This is an injected shell, you can apply any patches or modify the config now. Exit the shell to continue the build.'; bash" $KBUILDER_DIR/cache/PKGBUILD || print err "Could not inject bash shell into PKGBUILD"
 
+    if [[ "$KBUILDER_SOURCE_PKG" == "linux-hardened" ]]; then
+        print nor "Applying linux-hardened PKGBUILD compatibility fix..."
+        sed -i "s@https://github.com/anthraxx/\${pkgbase}/releases/download/\${_srctag}/\${pkgbase}-\${_srctag}.patch{,.sig}@https://github.com/anthraxx/linux-hardened/releases/download/\${_srctag}/linux-hardened-\${_srctag}.patch{,.sig}@" $KBUILDER_DIR/cache/PKGBUILD || print err "Could not apply fix to PKGBUILD"
+    fi
+    
     print nor "Setting build jobs..."
     case $KBUILDER_BUILD_JOBS in
         ''|*[!0-9]*) 

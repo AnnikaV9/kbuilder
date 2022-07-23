@@ -1,6 +1,6 @@
-% KBUILDER(1) kbuilder 0.3.2
+% KBUILDER(1) kbuilder 0.3.3
 % AnnikaV9 (github.com/AnnikaV9), wael444 (github.com/AnnikaV9)
-% 22 July 2022
+% 23 July 2022
 
 # NAME
 kbuilder - Bash script for building custom kernels in Arch Linux

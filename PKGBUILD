@@ -13,5 +13,5 @@ package() {
   install -Dm755 "$srcdir/$pkgname-$pkgver/kbuilder" "$pkgdir/usr/bin/kbuilder"
   install -Dm644 "$srcdir/$pkgname-$pkgver/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
   install -Dm644 "$srcdir/$pkgname-$pkgver/kbuilder.1.gz" "$pkgdir/usr/share/man/man1/kbuilder.1.gz"
-  sudo mkdir -p /etc/kbuilder/hooks
+  install -dm644 "$pkgdir/etc/kbuilder/hooks"
 }

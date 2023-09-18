@@ -4,7 +4,7 @@
 #
 
 PKGNAME="kbuilder"
-PKGVER="0.3.3"
+PKGVER="0.3.4"
 
 pandoc doc/$PKGNAME.1.md -s -t man -o doc/$PKGNAME.1 && 
 gzip -v -9 doc/$PKGNAME.1 &&

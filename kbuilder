@@ -107,6 +107,7 @@ command_build () {
     sed -i "s@pkgbase=$KBUILDER_SOURCE_PKG@pkgbase=$PKGNAME@" $KBUILDER_DIR/cache/PKGBUILD || print err "Could not set package name"
 
     print nor "Injecting bash shell and run-parts hook into PKGBUILD...."
+    sed -i "/  _make olddefconfig/a \  run-parts --verbose --regex 'kbuilder-hook-*' $HOOKS_DIR" $KBUILDER_DIR/cache/PKGBUILD || print err "Could not inject run-parts hook into PKGBUILD"
     sed -i "/  make olddefconfig/a \  run-parts --verbose --regex 'kbuilder-hook-*' $HOOKS_DIR" $KBUILDER_DIR/cache/PKGBUILD || print err "Could not inject run-parts hook into PKGBUILD"
     sed -i "/  run-parts/a \  echo ''; echo 'This is an injected shell, you can apply any patches or modify the config now. Exit the shell to continue the build.'; bash" $KBUILDER_DIR/cache/PKGBUILD || print err "Could not inject bash shell into PKGBUILD"
 

@@ -1,4 +1,4 @@
-% KBUILDER(1) kbuilder 0.3.4
+% KBUILDER(1) kbuilder 0.3.5
 % AnnikaV9 (github.com/AnnikaV9), wael444 (github.com/AnnikaV9)
 % 23 July 2022
 
@@ -28,7 +28,7 @@ For example, you could fetch the sources of the linux-lts kernel, apply a patch 
 
 # BUILD VARIABLES
 \-\-\- **KBUILDER_SOURCE_PACKAGE**
-:   Should be set as 'linux', 'linux-lts', 'linux-zen' or 'linux-hardened'. kbuilder will fetch and build the kernel specified with this variable. Defaults to 'linux'. 
+:   Should be set as 'linux', 'linux-lts', 'linux-zen' or 'linux-hardened'. kbuilder will fetch and build the kernel specified with this variable. Defaults to 'linux'.
 
 \-\-\- **KBUILDER_PKG_NAME_APPEND**
 :   Can be set as any string. It will be appended to the end of the kernel version and the kernel package. Defaults to 'kbuilder-custom'.

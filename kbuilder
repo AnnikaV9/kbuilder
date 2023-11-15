@@ -28,7 +28,7 @@
 # For more information, please refer to <http://unlicense.org/>
 #
 
-VERSION="0.3.3"
+VERSION="0.3.5"
 DESC="Bash script for building custom kernels in Arch Linux"
 KBUILDER_DIR="$HOME/.kbuilder"
 HOOKS_DIR="/etc/kbuilder/hooks"

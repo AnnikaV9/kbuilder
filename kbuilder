@@ -32,7 +32,7 @@ VERSION="0.3.3"
 DESC="Bash script for building custom kernels in Arch Linux"
 KBUILDER_DIR="$HOME/.kbuilder"
 HOOKS_DIR="/etc/kbuilder/hooks"
-SOURCE_URL="https://raw.githubusercontent.com/archlinux/svntogit-packages/packages"
+SOURCE_URL="https://gitlab.archlinux.org/archlinux/packaging/packages"
 
 print() {
     case $1 in
@@ -66,7 +66,7 @@ command_install () {
     print nor "Installing kernel packages with pacman..."
     comm="pacman -U $KBUILDER_DIR/cache/*.pkg.tar.zst "
     sudo $comm || print err "$comm did not complete successfully"
- 
+
     print nor "Deleting $KBUILDER_DIR/cache..."
     remove $KBUILDER_DIR/cache
 
@@ -75,7 +75,7 @@ command_install () {
 
 command_build () {
     check_and_create $KBUILDER_DIR/cache
-    
+
     print nor "Resolving source package..."
     if [[ -z "$KBUILDER_SOURCE_PKG" ]]; then
         print low "Using default 'linux'"
@@ -92,9 +92,9 @@ command_build () {
     print nor "Fetching required files..."
     for fetch in PKGBUILD config; do
     	print low_nonew "$fetch... "
-    	curl --silent -o $KBUILDER_DIR/cache/$fetch "$SOURCE_URL/$KBUILDER_SOURCE_PKG/trunk/$fetch" || print err_no "fail" "Could not fetch $fetch" && print no "done"
+    	curl --silent -o $KBUILDER_DIR/cache/$fetch "$SOURCE_URL/$KBUILDER_SOURCE_PKG/-/raw/main/PKGBUILD" || print err_no "fail" "Could not fetch $fetch" && print no "done"
     done
-    
+
     print nor "Setting package name..."
     def=""
     if [[ -z "$KBUILDER_PKG_NAME_APPEND" ]]; then
@@ -115,13 +115,13 @@ command_build () {
         print nor "Applying linux-hardened PKGBUILD compatibility fix..."
         sed -i "s@https://github.com/anthraxx/\${pkgbase}/releases/download/\${_srctag}/\${pkgbase}-\${_srctag}.patch{,.sig}@https://github.com/anthraxx/linux-hardened/releases/download/\${_srctag}/linux-hardened-\${_srctag}.patch{,.sig}@" $KBUILDER_DIR/cache/PKGBUILD || print err "Could not apply fix to PKGBUILD"
     fi
-    
+
     print nor "Setting build jobs..."
     case $KBUILDER_BUILD_JOBS in
-        ''|*[!0-9]*) 
+        ''|*[!0-9]*)
             print low "Using PKGBUILD's default"
             ;;
-        *) 
+        *)
             print low "Using '-j$KBUILDER_BUILD_JOBS'"
             sed -i "s@make htmldocs all@make -j$KBUILDER_BUILD_JOBS all@" $KBUILDER_DIR/cache/PKGBUILD || print err "Could not inject argument into PKGBUILD"
             ;;
